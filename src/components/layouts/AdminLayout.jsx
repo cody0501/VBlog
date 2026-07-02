@@ -4,9 +4,8 @@ import { selectCurrentUser, logoutUserAPI } from '~/redux/user/userSlice'
 import {
   LayoutDashboard,
   FileText,
-  MessageSquare,
+  BookOpen,
   Users,
-  Settings,
   LogOut
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
@@ -28,14 +27,14 @@ function AdminLayout() {
       {/* SIDEBAR CỐ ĐỊNH CỦA ADMIN */}
       <aside className="w-64 bg-[#fdfbf7] border-r border-[#e7e3dc] flex flex-col justify-between p-6 sticky top-0 h-screen">
         <div className="space-y-8">
-          <div>
-            <h2 className="font-serif text-2xl font-bold tracking-tight text-[#2c2520] leading-tight">
-              The Bibliophile's Journal
+          <Link to="/" className="no-underline block group">
+            <h2 className="font-serif text-2xl font-bold tracking-tight text-[#2c2520] leading-tight group-hover:text-[#4a3b32] transition-colors">
+              VBlog
             </h2>
-            <p className="font-sans text-[10px] uppercase tracking-widest font-bold text-[#a08e81] mt-1">
+            <p className="font-sans text-[10px] uppercase tracking-widest font-bold text-[#a08e81] mt-1 group-hover:text-[#70655d] transition-colors">
               CMS PORTAL
             </p>
-          </div>
+          </Link>
 
           <nav className="space-y-1 font-sans text-xs font-semibold tracking-wide">
             <Link
@@ -61,15 +60,15 @@ function AdminLayout() {
               Posts
             </Link>
             <Link
-              to="/admin/comments"
+              to="/admin/books"
               className={`flex items-center gap-3 px-4 py-3 rounded-lg no-underline transition-colors ${
-                isActive('/admin/comments')
+                isActive('/admin/books')
                   ? 'bg-[#4a3b32] text-white'
                   : 'text-[#70655d] hover:bg-[#f5f1ea] hover:text-[#2c2520]'
               }`}
             >
-              <MessageSquare className="w-4 h-4" />
-              Comments
+              <BookOpen className="w-4 h-4" />
+              Books Collection
             </Link>
             <Link
               to="/admin/users"
@@ -81,17 +80,6 @@ function AdminLayout() {
             >
               <Users className="w-4 h-4" />
               Users
-            </Link>
-            <Link
-              to="/admin/settings"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg no-underline transition-colors ${
-                isActive('/admin/settings')
-                  ? 'bg-[#4a3b32] text-white'
-                  : 'text-[#70655d] hover:bg-[#f5f1ea] hover:text-[#2c2520]'
-              }`}
-            >
-              <Settings className="w-4 h-4" />
-              Settings
             </Link>
           </nav>
         </div>

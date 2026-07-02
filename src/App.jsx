@@ -17,6 +17,7 @@ import AdminPostsPage from './pages/Admin/Posts'
 import AdminCommentsPage from './pages/Admin/Comments'
 import AdminSettingPage from './pages/Admin/Settings'
 import AdminUsersPage from './pages/Admin/Users'
+import AdminBooksPage from './pages/Admin/book/Books'
 
 // Protected Route: Yêu cầu đăng nhập mới được truy cập các Route bên trong
 const ProtectedRoute = ({ currentUser }) => {
@@ -51,6 +52,7 @@ function App() {
           {/* 2. ĐƯA ROUTE ADMIN VÀO ĐÂY */}
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/posts" element={<AdminPostsPage />} />
+          <Route path="/admin/books" element={<AdminBooksPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin/comments" element={<AdminCommentsPage />} />
           <Route path="/admin/settings" element={<AdminSettingPage />} />

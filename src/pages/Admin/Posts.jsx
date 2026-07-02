@@ -10,12 +10,17 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
+import CreatePostDialog from './CreatePostDialog'
 
 function AdminPostsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
 
+  // Dialog state
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
+
   // Giả lập danh sách bài viết chi tiết hơn phục vụ cho quản trị
+  // eslint-disable-next-line no-unused-vars
   const mockPosts = [
     {
       id: 1,
@@ -73,8 +78,10 @@ function AdminPostsPage() {
     }
   ]
 
+  const [listPosts, setListPosts] = useState([])
+
   // Xử lý bộ lọc tìm kiếm & trạng thái
-  const filteredPosts = mockPosts.filter((post) => {
+  const filteredPosts = listPosts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.author.toLowerCase().includes(searchTerm.toLowerCase())
@@ -82,6 +89,21 @@ function AdminPostsPage() {
       statusFilter === 'All' || post.status === statusFilter
     return matchesSearch && matchesStatus
   })
+
+  const handleSavePost = ({ title, category, status, content }) => {
+    const newPost = {
+      id: listPosts.length + 1,
+      title,
+      category,
+      author: 'A. Admin',
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      views: '0',
+      status,
+      content
+    }
+    console.log('>>> Dữ liệu bài viết mới lưu:', newPost)
+    setListPosts([newPost, ...listPosts])
+  }
 
   return (
     <div className="w-full min-h-screen p-4 sm:p-6 lg:p-10 flex flex-col gap-6 box-border">
@@ -96,10 +118,18 @@ function AdminPostsPage() {
             blog.
           </p>
         </div>
-        <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#4a3b32] hover:bg-[#382c25] text-white rounded-xl border-none font-sans text-xs font-semibold tracking-wide transition-all cursor-pointer shadow-sm shrink-0">
+        <button
+          onClick={() => setIsCreateOpen(true)}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#4a3b32] hover:bg-[#382c25] text-white rounded-xl border-none font-sans text-xs font-semibold tracking-wide transition-all cursor-pointer shadow-sm shrink-0 animate-fade-in"
+        >
           <Plus className="w-4 h-4" />
           Write New Post
         </button>
+        <CreatePostDialog
+          isOpen={isCreateOpen}
+          onOpenChange={setIsCreateOpen}
+          onSave={handleSavePost}
+        />
       </div>
 
       {/* 2. BỘ LỌC & TÌM KIẾM (Thanh công cụ linh hoạt trên mọi thiết bị) */}

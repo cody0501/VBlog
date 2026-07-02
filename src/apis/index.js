@@ -27,3 +27,23 @@ export const getUsersAPI = async (searchPath) => {
   const response = await authorizedAxiosInstance.get(`${API_ENDPOINT}/api/v1/users${searchPath}`)
   return response.data
 }
+
+export const getListBooksAPI = async (searchPath) => {
+  const response = await authorizedAxiosInstance.get(`${API_ENDPOINT}/api/v1/books${searchPath || ''}`)
+  return response.data
+}
+
+export const createNewBookAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ENDPOINT}/api/v1/books`, data)
+  return response.data
+}
+
+export const updateBookAPI = async (bookId, data) => {
+  const response = await authorizedAxiosInstance.put(`${API_ENDPOINT}/api/v1/books/${bookId}`, data)
+  return response.data
+}
+
+export const deleteBookAPI = async (bookId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ENDPOINT}/api/v1/books/${bookId}`)
+  return response.data
+}
