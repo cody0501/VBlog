@@ -47,3 +47,14 @@ export const deleteBookAPI = async (bookId) => {
   const response = await authorizedAxiosInstance.delete(`${API_ENDPOINT}/api/v1/books/${bookId}`)
   return response.data
 }
+
+export const getListPostsAPI = async (searchPath) => {
+  const response = await authorizedAxiosInstance.get(`${API_ENDPOINT}/api/v1/posts${searchPath || ''}`)
+  return response.data
+}
+
+export const getPostDetailAPI = async (postId) => {
+  const response = await authorizedAxiosInstance.get(`${API_ENDPOINT}/api/v1/posts/${postId}`)
+  return response.data
+}
+
