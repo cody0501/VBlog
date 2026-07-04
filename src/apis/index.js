@@ -47,3 +47,18 @@ export const deleteBookAPI = async (bookId) => {
   const response = await authorizedAxiosInstance.delete(`${API_ENDPOINT}/api/v1/books/${bookId}`)
   return response.data
 }
+
+export const getCategoriesAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ENDPOINT}/api/v1/categories`)
+  return response.data
+}
+
+export const createCategoryAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ENDPOINT}/api/v1/categories`, data)
+  return response.data
+}
+
+export const deleteCategoryAPI = async (catId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ENDPOINT}/api/v1/categories/${catId}`)
+  return response.data
+}
