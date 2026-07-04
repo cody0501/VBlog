@@ -36,29 +36,33 @@ function AdminBooksPage() {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [editingBook, setEditingBook] = useState(null)
 
-  useEffect(() => {
-    getListBooksAPI(`?page=${page}&limit=${DEFAULT_ITEMS_PER_PAGE}`)
+  const fetchBooks = (pageNumber) => {
+    getListBooksAPI(`?page=${pageNumber}&limit=${DEFAULT_ITEMS_PER_PAGE}`)
       .then(res => {
         setListBooks(res.books)
         setTotalPages(Math.ceil(res.totalItem / DEFAULT_ITEMS_PER_PAGE))
       })
+  }
+
+  useEffect(() => {
+    fetchBooks(page)
   }, [page])
 
   const handlePageChange = newPage => {
     navigate(`?page=${newPage}`)
   }
 
-  const handleSaveBook = async ({ title, author, isbn, cover_image_url }) => {
+  const handleSaveBook = async ({ title, author, isbn, cover_image_url, category }) => {
     const newBook = {
       title,
       author,
       isbn,
-      cover_image_url
+      cover_image_url,
+      category
     }
-    console.log("🚀 ~ handleSaveBook ~ newBook:", newBook)
-    const response = await createNewBookAPI(newBook)
-    setListBooks([...listBooks, response.book])
-
+    console.log('🚀 ~ handleSaveBook ~ newBook:', newBook)
+    await createNewBookAPI(newBook)
+    fetchBooks(page)
   }
 
   const handleDeleteBook = async (bookId) => {
@@ -67,8 +71,11 @@ function AdminBooksPage() {
       { pending: 'Deleting book...' }
     ).then(res => {
       if (!res.error) {
-        const newListBooks = listBooks.filter(book => book.id !== bookId)
-        setListBooks(newListBooks)
+        if (listBooks.length === 1 && page > 1) {
+          navigate(`?page=${page - 1}`)
+        } else {
+          fetchBooks(page)
+        }
       }
     })
   }
@@ -86,6 +93,15 @@ function AdminBooksPage() {
       }
     })
 
+    if (updatedData.category !== undefined) {
+      const newCats = updatedData.category || []
+      const oldCats = originalBook.category || []
+      const isChanged = newCats.length !== oldCats.length || newCats.some(id => !oldCats.includes(id))
+      if (isChanged) {
+        updatePayload.category = newCats
+      }
+    }
+
     if (Object.keys(updatePayload).length === 0) {
       toast.info('Không có thay đổi nào được phát hiện.')
       return
@@ -96,7 +112,7 @@ function AdminBooksPage() {
       { pending: 'Updating book...' }
     ).then(res => {
       if (!res.error) {
-        setListBooks(listBooks.map(b => b.id === bookId ? res.book : b))
+        fetchBooks(page)
       }
     })
   }
@@ -144,7 +160,8 @@ function AdminBooksPage() {
         <Table className="font-sans text-xs">
           <TableHeader>
             <TableRow className="border-b border-[#f4f1eb] bg-[#fdfbf7] hover:bg-[#fdfbf7]">
-              <TableHead className="px-6 py-4 font-bold uppercase tracking-wider text-[#a08e81] w-[45%]">Book</TableHead>
+              <TableHead className="px-6 py-4 font-bold uppercase tracking-wider text-[#a08e81] w-[35%]">Book</TableHead>
+              <TableHead className="px-6 py-4 font-bold uppercase tracking-wider text-[#a08e81]">Thể loại</TableHead>
               <TableHead className="px-6 py-4 font-bold uppercase tracking-wider text-[#a08e81]">ISBN</TableHead>
               <TableHead className="px-6 py-4 font-bold uppercase tracking-wider text-[#a08e81]">Created At</TableHead>
               <TableHead className="px-6 py-4 font-bold uppercase tracking-wider text-[#a08e81] text-center w-28">
@@ -183,6 +200,11 @@ function AdminBooksPage() {
                         </span>
                       </div>
                     </div>
+                  </TableCell>
+
+                  {/* Thể loại (Category) */}
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-xs text-[#70655d]">
+                    {book.category || 'N/A'}
                   </TableCell>
 
                   {/* ISBN */}
